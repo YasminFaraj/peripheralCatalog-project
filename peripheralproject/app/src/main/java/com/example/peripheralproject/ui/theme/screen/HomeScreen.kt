@@ -21,11 +21,13 @@ fun HomeScreen(
     viewModel: PeripheralsViewModel,
     onOpenDetail: (Int) -> Unit,
     onOpenFavorites: () -> Unit,
-    onOpenCreate: () -> Unit
+    onOpenCreate: () -> Unit,
+    onOpenCompare: () -> Unit
 ) {
     val peripherals by viewModel.peripherals.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val query by viewModel.searchQuery.collectAsState()
+    val selectedForComparison by viewModel.selectedForComparison.collectAsState()
 
     Scaffold(
         topBar = {
@@ -58,6 +60,17 @@ fun HomeScreen(
                 label = { Text("Buscar por nome") }
             )
 
+            // Botão simples para abrir a tela de comparação
+            Button(
+                onClick = onOpenCompare,
+                enabled = selectedForComparison.size in 2..3,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text("Comparar (${selectedForComparison.size}/3)")
+            }
+
             if (isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -70,6 +83,8 @@ fun HomeScreen(
                     items(peripherals) { item ->
                         PeripheralItem(
                             peripheral = item,
+                            isSelected = selectedForComparison.contains(item.id),
+                            onToggleCompare = { viewModel.toggleCompareSelection(item.id) },
                             onClick = { onOpenDetail(item.id) }
                         )
                     }
@@ -82,18 +97,35 @@ fun HomeScreen(
 @Composable
 private fun PeripheralItem(
     peripheral: PeripheralEntity,
+    isSelected: Boolean,
+    onToggleCompare: () -> Unit,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clickable(onClick = onClick)
     ) {
-        Column(Modifier.padding(8.dp)) {
-            Text(peripheral.name, style = MaterialTheme.typography.titleMedium)
-            Text(peripheral.brand, style = MaterialTheme.typography.bodyMedium)
-            Text("R$ ${peripheral.price}", style = MaterialTheme.typography.bodySmall)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = isSelected,
+                onCheckedChange = { onToggleCompare() }
+            )
+            Spacer(Modifier.width(8.dp))
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable(onClick = onClick)
+            ) {
+                Text(peripheral.name, style = MaterialTheme.typography.titleMedium)
+                Text(peripheral.brand, style = MaterialTheme.typography.bodyMedium)
+                Text("R$ ${peripheral.price}", style = MaterialTheme.typography.bodySmall)
+            }
         }
     }
 }

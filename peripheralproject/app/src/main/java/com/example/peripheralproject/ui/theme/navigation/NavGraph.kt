@@ -12,12 +12,14 @@ import com.example.peripheralproject.ui.theme.screen.DetailScreen
 import com.example.peripheralproject.ui.theme.screen.EditPeripheralScreen
 import com.example.peripheralproject.ui.theme.screen.FavoritesScreen
 import com.example.peripheralproject.ui.theme.screen.HomeScreen
+import com.example.peripheralproject.ui.theme.screen.CompareScreen
 
 object Routes {
     const val HOME = "home"
     const val DETAIL = "detail"
     const val FAVORITES = "favorites"
     const val EDIT = "edit"
+    const val COMPARE = "compare"
 }
 
 @Composable
@@ -44,6 +46,9 @@ fun AppNavGraph(
                 },
                 onOpenCreate = {
                     navController.navigate(Routes.EDIT)
+                },
+                onOpenCompare = {
+                    navController.navigate(Routes.COMPARE)
                 }
             )
         }
@@ -93,6 +98,13 @@ fun AppNavGraph(
             EditPeripheralScreen(
                 viewModel = viewModel,
                 peripheralId = id,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.COMPARE) {
+            CompareScreen(
+                viewModel = viewModel,
                 onBack = { navController.popBackStack() }
             )
         }

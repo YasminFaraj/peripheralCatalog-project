@@ -34,6 +34,10 @@ class PeripheralsViewModel(application: Application) : AndroidViewModel(applicat
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
+    
+    private val _selectedForComparison = MutableStateFlow<List<Int>>(emptyList())
+    val selectedForComparison: StateFlow<List<Int>> = _selectedForComparison.asStateFlow()
+
     init {
         loadPeripherals()
     }
@@ -90,6 +94,19 @@ class PeripheralsViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             repository.toggleFavorite(peripheralId, currentlyFavorite)
         }
+    }
+
+    fun toggleCompareSelection(peripheralId: Int) {
+        val current = _selectedForComparison.value
+        _selectedForComparison.value = if (current.contains(peripheralId)) {
+            current - peripheralId
+        } else {
+            if (current.size >= 3) current else current + peripheralId
+        }
+    }
+
+    fun clearComparisonSelection() {
+        _selectedForComparison.value = emptyList<Int>()
     }
 
     fun savePeripheral(
