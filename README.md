@@ -1,35 +1,23 @@
 # README - PeripheralCatalog
 
-## Integrantes da Equipe
-
--   Yasmin Faraj
--   Felipe Uemura
+## Integrantes
+- Yasmin Faraj
+- Felipe Uemura
 
 ## Sobre o Projeto
-
 O PeripheralCatalog é um aplicativo Android desenvolvido em Kotlin, utilizando
 arquitetura MVVM, Jetpack Compose para a interface e Room para
 armazenamento local. O aplicativo permite cadastrar, listar, consultar e
 excluir periféricos, com integração opcional a uma API via Retrofit.
 
-## Estrutura do Projeto
-
--   MVVM (Model-View-ViewModel)
--   Room Database para persistência
--   Retrofit para consumo de API externa
--   Jetpack Compose para UI
--   Repository centralizando fonte de dados
-
-## Instruções para Execução
-
+## Como Executar
 1.  Abra o projeto no Android Studio.
 2.  Aguarde o Gradle sincronizar.
 3.  Execute em um dispositivo físico ou emulador.
 4.  O banco de dados é criado automaticamente pelo Room.
 
-## Endpoints da API
-
-O projeto utiliza uma requisição simples: - GET /peripherals\
+## Endpoints
+O projeto utiliza uma requisição simples: - `GET /peripherals` — lista periféricos.
 Retorna uma lista de periféricos contendo id, name, brand e type.
 
 ## Diagrama de Navegação
@@ -39,10 +27,54 @@ MainActivity\
 → Adicionar Periférico\
 → Detalhes do Periférico
 
-## Estrutura do Banco de Dados (Room)
+### ASCII
+```
+[Splash] -> [Home]
+[Home] -> [Lista]
+[Home] -> [Adicionar]
+[Lista] -> [Detalhes]
+[Lista] -> [Buscar]
+[Buscar] -> [Resultados] -> [Detalhes]
+[Home] -> [Favoritos]
+```
+
+### Mermaid
+```mermaid
+flowchart TD
+  Splash --> Home
+  Home --> Lista
+  Home --> Adicionar
+  Home --> Favoritos
+  Lista --> Detalhes
+  Lista --> Buscar
+  Buscar --> Resultados --> Detalhes
+```
+
+## Banco de Dados (Room)
+
+## Estrutura do Banco de Dados
 
 Tabela: PeripheralEntity\
 Campos: - id (Primary Key) - name - brand - type
+
+```
+PeripheralEntity
+- id: Long
+- name: String
+- brand: String
+- type: String
+- isFavorite: Boolean
+```
+
+DAO:
+```
+insert()
+update()
+delete()
+getAll()
+findById()
+search()
+```
 
 ## Funcionalidades
 
@@ -52,6 +84,12 @@ Campos: - id (Primary Key) - name - brand - type
 -   Persistência local
 -   Consumo de API
 -   Interface em Compose
+
+## Estrutura
+- MVVM
+- Jetpack Compose
+- Room
+- Repository
 
 ## Trabalho em Equipe e Contribuições
 
